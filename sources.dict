@@ -1,0 +1,48 @@
+{
+    "1": {
+        "Name" : "i1; c1;",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 15,
+        "SetCurrRange" : 0.002,
+        "VoltRanges" : [15],
+        "CurrRanges" : [0.002, 0.2]
+    },
+    "2": {
+        "Name" : "i1; c2;",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 15,
+        "SetCurrRange" : 0.002,
+        "VoltRanges" : [15],
+        "CurrRanges" : [0.002, 0.2]
+    },
+    "3": {
+        "Name" : "i1; c3;",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 15,
+        "SetCurrRange" : 0.002,
+        "VoltRanges" : [15],
+        "CurrRanges" : [0.002, 0.2]
+    },
+    "37": {
+        "Name" : "i7;",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 1.2,
+        "SetCurrRange" : 0.2,
+        "VoltRanges" : [1.2, 12],
+        "CurrRanges" : [0.002, 0.2]
+    },
+    "38": {
+        "Name" : "i8;",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 1.2,
+        "SetCurrRange" : 0.2,
+        "VoltRanges" : [1.2, 12],
+        "CurrRanges" : [0.002, 0.2]
+    }
+}
+
