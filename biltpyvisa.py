@@ -1,31 +1,19 @@
+"""
+With this class the BILT power supplies can be controlled from python.
+"""
+
+import visa
 import time
 import json
 import collections
-import socket
 
-class SocketObj:
-    def __init__(self, address, port):
-        s = socket.socket()
-        s.connect((str(address), port))
-        self.s = s
-        #self.ask("*IDN?")
+def blubb(st):
+    print st
 
-    def ask(self, cmd):
-        astr = ""
-        self.s.send(cmd + "\n")
-        while 1:
-            r = self.s.recv(4096)
-            if not r: break
-            astr += r
-            if r.find('\n') != -1: break
-        return astr.rstrip()
+def blubber(st):
+    print st
 
-    def write(self, cmd):
-        self.s.send(cmd + "\n")
-        time.sleep(0.2)
-
-
-class Bilt():
+class BiltSource():
     def __init__(self, conf = "sources.dict"):
         """ Constructor.
 
@@ -35,13 +23,13 @@ class Bilt():
         self.sources = self.readconfig(conf)
         self.initComm()
 
-    def initComm(self, ip="192.168.1.251"):
+    def initComm(self, ip="192.168.1.111"):
         """ Initalizes communication with device via visa.
         
         Keyword argument:
-        ip -- IP adress of the source, defaults to 192.168.1.251
+        ip -- IP adress of the source, defaults to 192.168.1.111
         """
-        self.s = SocketObj(str(ip), 5025)
+        self.s = visa.instrument("TCPIP::192.168.1.251::5025::SOCKET", term_chars = "\n")
 
     def on(self, nr):
         """ Switch on source nr."""
@@ -85,18 +73,17 @@ class Bilt():
 
     def setcurrentrange(self, nr, ran):
         """ Set current range for source nr to ran."""
-        if ran in self.sources[str(nr)]["CurrRanges"]:
+        if ran in self.sources[str(nr)]["VoltRanges"]:
             adr = self.sources[str(nr)]["Name"]
             self.s.write(adr + " curr:rang:auto off")
-            self.s.write(adr + " curr:rang" + str(ran))
+            self.s.write(adr + " curr:rang" + self.sources[str(nr)]["Range"])
             self.sources[str(nr)]["SetCurrRange"] = ran
         else:
             print "range not available, possible are %s" % str(self.sources[str(nr)]["CurrRanges"])
 
     def getvoltage(self, nr):
         """ Returns currently set voltage for source nr."""
-        cmd = self.sources[str(nr)]["Name"] + " meas:volt ?"
-        return self.s.ask(cmd)
+        return self.s.ask(self.sources[str(nr)]["Name"] + " meas:volt ?")
 
     def getcurrent(self, nr):
         """ Returns currently set current for source nr."""
@@ -110,7 +97,7 @@ class Bilt():
     def getcurrentrange(self, nr):
         """ Returns currently set current range for source nr."""
         adr = self.sources[str(nr)]["Name"]
-        return self.s.ask(adr + "curr:range ?")        
+        return self.s.ask(adr + "volt:curr ?")        
 
     def readconfig(self, conf):
         """ Reads configurations from file conf and return dictionary."""
@@ -126,6 +113,6 @@ class Bilt():
     def getstatus(self, nr):
         """ Returns status of source nr."""
         adr = self.sources[str(nr)]["Name"]
-        retr = self.s.ask(adr + "state ?")
+        self.s.ask(adr + "state ?")
         states = {'0' : 'Off', '1' : 'On', '2' : 'Warning', '3' : 'Alarm'}
-        return states[str(retr)]
+        return states[str(0)]

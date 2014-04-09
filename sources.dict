@@ -33,7 +33,7 @@
         "SetVoltRange" : 1.2,
         "SetCurrRange" : 0.2,
         "VoltRanges" : [1.2, 12],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.2]
     },
     "38": {
         "Name" : "i8;",
@@ -42,7 +42,7 @@
         "SetVoltRange" : 1.2,
         "SetCurrRange" : 0.2,
         "VoltRanges" : [1.2, 12],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.2]
     }
 }
 
