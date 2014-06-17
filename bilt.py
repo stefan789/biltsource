@@ -5,23 +5,48 @@ import socket
 
 class SocketObj:
     def __init__(self, address, port):
+        self.__connect(address, port)
+        self.has_errored = False
+
+    def __connect(self, address, port):
         s = socket.socket()
         s.connect((str(address), port))
         self.s = s
-        #self.ask("*IDN?")
+        self.port = port
+        self.address = address
+
+    def __socket_call(self, func, args):
+        retVal = None
+        try:
+            retVal = func(args)
+        except IOError as e:
+            # reraise if it's happened before
+            if self.has_errored: raise e 
+            # otherwise try a reconnect
+            self.has_errored = True
+            self.__connect(self.address, self.port)
+            retVal = self.__socket_call(func, args) 
+        self.has_errored = False
+        return retVal
+
+    def __send(self, args):
+        return self.__socket_call(self.s.send, args)
+
+    def __recv(self, args):
+        return self.__socket_call(self.s.recv, args)
 
     def ask(self, cmd):
         astr = ""
-        self.s.send(cmd + "\n")
+        self.__send(cmd + "\n")
         while 1:
-            r = self.s.recv(4096)
+            r = self.__recv(4096)
             if not r: break
             astr += r
             if r.find('\n') != -1: break
         return astr.rstrip()
 
     def write(self, cmd):
-        self.s.send(cmd + "\n")
+        self.__send(cmd + "\n")
         time.sleep(0.2)
 
 
