@@ -60,7 +60,7 @@ class Bilt():
         self.sources = self.readconfig(conf)
         self.initComm()
 
-    def initComm(self, ip="192.168.1.251"):
+    def initComm(self, ip="currentsource.1.nedm1"):
         """ Initalizes communication with device via visa.
         
         Keyword argument:
