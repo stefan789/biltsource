@@ -92,7 +92,7 @@ class Bilt():
     def setcurrent(self, nr, curr=0.0):
         """ Set current for source nr to curr."""
         adr = self.sources[str(nr)]["Name"]
-        if cur <= self.sources[str(nr)]["SetCurrRange"]:
+        if curr <= self.sources[str(nr)]["SetCurrRange"]:
             self.s.write(adr + " curr " + str(volt))
             self.sources[str(nr)]["SetCurr"] = curr
         else:
