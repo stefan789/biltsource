@@ -93,7 +93,7 @@ class Bilt():
         """ Set current for source nr to curr."""
         adr = self.sources[str(nr)]["Name"]
         if curr <= self.sources[str(nr)]["SetCurrRange"]:
-            self.s.write(adr + " curr " + str(volt))
+            self.s.write(adr + " curr " + str(curr))
             self.sources[str(nr)]["SetCurr"] = curr
         else:
             print "Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetCurrRange"]), str(self.sources[str(nr)]["CurrRanges"]))
