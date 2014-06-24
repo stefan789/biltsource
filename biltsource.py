@@ -52,8 +52,29 @@ def main():
         return f
     import inspect
     import pynedm
+    import time
     all_methods = inspect.getmembers(BiltSource(0), inspect.ismethod)
-    adict = {}
+    def _create_function(aname):
+        def _f(*args):
+            o = bilt.Bilt()
+            return getattr(o, aname)(*args)
+        return _f
+
+    def run_ramp():
+        def f():
+            _stop_run = False
+            o = bilt.Bilt()
+            pynedm.write_document_to_db({ "type" : "data", "value" : { "ramp_running" : 1 } })
+            o.run_ramp()
+            while (int(o.read_macro_state()) == 2):
+              time.sleep(1.)
+            pynedm.write_document_to_db({ "type" : "data", "value" : { "ramp_running" : 0 } })
+        pynedm.start_process(f)
+
+    alist = ['setup_ramp', 'read_macro_data', 'readallerrors', 'stop_macro']
+    adict = dict([(k, _create_function(k)) for k in alist])
+    adict['run_ramp'] = run_ramp
+
     for name, _ in all_methods:
         if name[:2] == '__': continue
         adict[name] = _make_lambda(name)
