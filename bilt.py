@@ -148,6 +148,14 @@ class Bilt():
         with open(str(fil), "w") as f:
             f.write(json.dumps(self.sources, indent=4, separators = (',', ' : ')))
 
+    def readallerrors(self):
+        ret_array = []
+        while 1:
+            rbck = self.s.ask("syst:err?")
+            if rbck[:4] == '+000': break
+            ret_array.append(rbck)
+        if len(ret_array) == 0: ret_array = ["No errors"]
+        return ret_array
     def getstatus(self, nr):
         """ Returns status of source nr."""
         adr = self.sources[str(nr)]["Name"]
