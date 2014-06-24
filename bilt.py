@@ -87,7 +87,7 @@ class Bilt():
             self.s.write(adr + " volt " + str(volt))
             self.sources[str(nr)]["SetVolt"] = volt
         else:
-            print "Voltage out of range, setvoltrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetVoltRange"]), str(self.sources[str(nr)]["VoltRanges"]))
+            raise Exception("Voltage out of range, setvoltrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetVoltRange"]), str(self.sources[str(nr)]["VoltRanges"])))
 
     def setcurrent(self, nr, curr=0.0):
         """ Set current for source nr to curr."""
@@ -96,7 +96,7 @@ class Bilt():
             self.s.write(adr + " curr " + str(curr))
             self.sources[str(nr)]["SetCurr"] = curr
         else:
-            print "Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetCurrRange"]), str(self.sources[str(nr)]["CurrRanges"]))
+            raise Exception("Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetCurrRange"]), str(self.sources[str(nr)]["CurrRanges"])))
     
     def setvoltrange(self, nr, ran):
         """ Set voltage range for source nr to ran."""
@@ -106,7 +106,7 @@ class Bilt():
             self.s.write(adr + " volt:rang" + str(ran))
             self.sources[str(nr)]["SetVoltRange"] = ran
         else:
-            print "range not available, possible are %s" % str(self.sources[str(nr)]["VoltRanges"])
+            raise Exception("range not available, possible are %s" % str(self.sources[str(nr)]["VoltRanges"]))
 
     def setcurrentrange(self, nr, ran):
         """ Set current range for source nr to ran."""
@@ -116,7 +116,7 @@ class Bilt():
             self.s.write(adr + " curr:rang" + str(ran))
             self.sources[str(nr)]["SetCurrRange"] = ran
         else:
-            print "range not available, possible are %s" % str(self.sources[str(nr)]["CurrRanges"])
+            raise Exception("range not available, possible are %s" % str(self.sources[str(nr)]["CurrRanges"]))
 
     def getvoltage(self, nr):
         """ Returns currently set voltage for source nr."""
