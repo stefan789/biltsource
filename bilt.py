@@ -190,12 +190,28 @@ p:mac2,0,0,0,""
 p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
         map(self.s.write, ar.split('\n'))
         return True
+
+    def read_macro_data(self):
+        return_list = []
+        self.s.write("p1")
+        query_str = "p:mac:set?"
+        while 1:
+            anstr = self.s.ask(query_str)
+            query_str = "p:mac:set:next?"
+            if anstr == 'END':
+                break
+            return_list.append(anstr)
+        return return_list
+
     def stop_macro(self):
         self.s.write("p1; p:stat off")
 
     def run_ramp(self):
         self.stop_macro()
         self.s.write("p1; p:stat on")
+
+    def read_macro_state(self):
+        return self.s.ask("p1; p:stat?")
 
     def getstatus(self, nr):
         """ Returns status of source nr."""
