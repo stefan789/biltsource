@@ -156,6 +156,47 @@ class Bilt():
             ret_array.append(rbck)
         if len(ret_array) == 0: ret_array = ["No errors"]
         return ret_array
+    def setup_ramp(self, adict):
+        time_length = float(adict.get("time_length", 1.))
+        all_keys = adict.get("channels", {})
+        scpi_cmds = ["", "", ""]
+        total_steps = int(10*time_length)
+        i = 0
+        for v in all_keys:
+            v['addr'] = self.sources[str(v['nr'])]["Name"]
+            for l in ['min', 'max']:
+                v[l] = float(v[l])
+            v['step_size'] = (v['max'] - v['min'])/float(total_steps)
+            if i < 10:
+                v["var_name"] = "0"
+            v["var_name"] += str(i)
+            i += 1
+            scpi_cmds[0] += "var%(var_name)s,%(min)g;" % v
+            scpi_cmds[1] += "%(addr)s:%(type)s #%(var_name)s#;:" % v
+            v["comp"] = "ifge"
+            if v['step_size'] < 0:
+               v["comp"] = "ifle"
+            v['max'] -= v['step_size']/2.
+        for v in all_keys:
+            scpi_cmds[1] += "var%(var_name)s:add %(step_size)g;:" % v
+        for v in all_keys:
+            scpi_cmds[1] += "var%(var_name)s:%(comp)s %(max)s;:p:stat off;:" % v
+
+        ar = """var:ar off
+p1; p:stat off; p:def
+p:mac0,1,0,0,"%s"
+p:mac1,1,0,1,"%s"
+p:mac2,0,0,0,""
+p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
+        map(self.s.write, ar.split('\n'))
+        return True
+    def stop_macro(self):
+        self.s.write("p1; p:stat off")
+
+    def run_ramp(self):
+        self.stop_macro()
+        self.s.write("p1; p:stat on")
+
     def getstatus(self, nr):
         """ Returns status of source nr."""
         adr = self.sources[str(nr)]["Name"]
