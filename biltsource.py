@@ -15,16 +15,16 @@ class BiltSource(object):
         return self.b.getstatus(self.nr)
 
     def setvoltage(self, volt=0.0):
-        self.b.setvoltage(self.nr, volt)
+        self.b.setvoltage(self.nr, float(volt))
 
     def setcurrent(self, curr=0.0):
-        self.b.setcurrent(self.nr, curr)
+        self.b.setcurrent(self.nr, float(curr))
 
     def setvoltrange(self, ran):
-        self.b.setvoltrange(self.nr, ran)
+        self.b.setvoltrange(self.nr, float(ran))
     
     def setcurrentrange(self, ran):
-        self.b.setcurrentrange(self.nr, ran)
+        self.b.setcurrentrange(self.nr, float(ran))
 
     def getvoltage(self):
         return self.b.getvoltage(self.nr)
@@ -37,6 +37,15 @@ class BiltSource(object):
 
     def getcurrentrange(self):
         return self.b.getcurrentrange(self.nr)
+
+    def clearstatus(self):
+        return self.b.clearstatus(self.nr)
+
+    def userask(self, cmd):
+        return self.b.userask(self.nr, cmd)
+
+    def userwrite(self, cmd):
+        self.b.userwrite(self.nr, cmd)
 
 def main():
     _built_source_objs = {}
