@@ -120,22 +120,30 @@ class Bilt():
 
     def getvoltage(self, nr):
         """ Returns currently set voltage for source nr."""
-        cmd = self.sources[str(nr)]["Name"] + " meas:volt ?"
-        return self.s.ask(cmd)
+        return self.userask(nr, " meas:volt ?")
 
     def getcurrent(self, nr):
         """ Returns currently set current for source nr."""
-        return self.s.ask(self.sources[str(nr)]["Name"] + " meas:curr ?")
+        return self.userask(nr, " meas:curr ?")
 
     def getvoltrange(self, nr):
         """ Returns currently set voltage range for source nr."""
-        adr = self.sources[str(nr)]["Name"]
-        return self.s.ask(adr + "volt:range ?")        
+        return self.userask(nr, "volt:range ?")
 
     def getcurrentrange(self, nr):
         """ Returns currently set current range for source nr."""
+        return self.userask(nr, "curr:range ?")
+
+    def clearstatus(self, nr):
+        self.userwrite(nr, "stat:clear")
+
+    def userask(self, nr, cmd):
         adr = self.sources[str(nr)]["Name"]
-        return self.s.ask(adr + "curr:range ?")        
+        return self.s.ask(adr + cmd)
+
+    def userwrite(self, nr, cmd):
+        adr = self.sources[str(nr)]["Name"]
+        self.s.write(adr + cmd)
 
     def readconfig(self, conf):
         """ Reads configurations from file conf and return dictionary."""
