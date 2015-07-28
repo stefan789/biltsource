@@ -1,6 +1,7 @@
 {
     "1": {
         "Name" : "i1; c1;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -10,6 +11,7 @@
     },
     "2": {
         "Name" : "i1; c2;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -19,6 +21,7 @@
     },
     "3": {
         "Name" : "i1; c3;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -28,6 +31,7 @@
     },
     "4": {
         "Name" : "i1; c4;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -37,6 +41,7 @@
     },
     "5": {
         "Name" : "i1; c5;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -46,6 +51,7 @@
     },
     "6": {
         "Name" : "i1; c6;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -55,6 +61,7 @@
     },
     "7": {
         "Name" : "i2; c1;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -64,6 +71,7 @@
     },
     "8": {
         "Name" : "i2; c2;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -73,6 +81,7 @@
     },
     "9": {
         "Name" : "i2; c3;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -82,6 +91,7 @@
     },
     "10": {
         "Name" : "i2; c4;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -91,6 +101,7 @@
     },
     "11": {
         "Name" : "i2; c5;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -100,6 +111,7 @@
     },
     "12": {
         "Name" : "i2; c6;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -109,6 +121,7 @@
     },
     "13": {
         "Name" : "i3; c1;",
+        "CoilName": "cBR2",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -118,6 +131,7 @@
     },
     "14": {
         "Name" : "i3; c2;",
+        "CoilName": "cBR3",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -127,6 +141,7 @@
     },
     "15": {
         "Name" : "i3; c3;",
+        "CoilName": "cBR4",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -136,6 +151,7 @@
     },
     "16": {
         "Name" : "i3; c4;",
+        "CoilName": "cBR5",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -145,6 +161,7 @@
     },
     "17": {
         "Name" : "i3; c5;",
+        "CoilName": "cBL2",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -154,6 +171,7 @@
     },
     "18": {
         "Name" : "i3; c6;",
+        "CoilName": "cBL3",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -163,6 +181,7 @@
     },
     "19": {
         "Name" : "i4; c1;",
+        "CoilName": "cBL4",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -172,6 +191,7 @@
     },
     "20": {
         "Name" : "i4; c2;",
+        "CoilName": "cBL5",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -181,6 +201,7 @@
     },
     "21": {
         "Name" : "i4; c3;",
+        "CoilName": "cTL3",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -190,6 +211,7 @@
     },
     "22": {
         "Name" : "i4; c4;",
+        "CoilName": "cTL4",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -199,6 +221,7 @@
     },
     "23": {
         "Name" : "i4; c5;",
+        "CoilName": "cTL5",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -208,6 +231,7 @@
     },
     "24": {
         "Name" : "i4; c6;",
+        "CoilName": "cBL1",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -217,6 +241,7 @@
     },
     "25": {
         "Name" : "i5; c1;",
+        "CoilName": "cTR3",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -226,6 +251,7 @@
     },
     "26": {
         "Name" : "i5; c2;",
+        "CoilName": "cTR4",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -235,6 +261,7 @@
     },
     "27": {
         "Name" : "i5; c3;",
+        "CoilName": "cTR5",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -244,6 +271,7 @@
     },
     "28": {
         "Name" : "i5; c4;",
+        "CoilName": "cBR1",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -253,6 +281,7 @@
     },
     "29": {
         "Name" : "i5; c5;",
+        "CoilName": "cR0",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -262,6 +291,7 @@
     },
     "30": {
         "Name" : "i5; c6;",
+        "CoilName": "cTR1",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -271,6 +301,7 @@
     },
     "31": {
         "Name" : "i6; c1;",
+        "CoilName": "cTR2",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -280,6 +311,7 @@
     },
     "32": {
         "Name" : "i6; c2;",
+        "CoilName": "cL0",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -289,6 +321,7 @@
     },
     "33": {
         "Name" : "i6; c3;",
+        "CoilName": "cTL1",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -298,6 +331,7 @@
     },
     "34": {
         "Name" : "i6; c4;",
+        "CoilName": "cTL2",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -307,6 +341,7 @@
     },
     "35": {
         "Name" : "i6; c5;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -316,6 +351,7 @@
     },
     "36": {
         "Name" : "i6; c6;",
+        "CoilName": "x",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 15,
@@ -325,6 +361,7 @@
     },
     "37": {
         "Name" : "i7;",
+        "CoilName": "B0",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 1.2,
@@ -334,6 +371,47 @@
     },
     "38": {
         "Name" : "i8;",
+        "CoilName": "x",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 1.2,
+        "SetCurrRange" : 0.2,
+        "VoltRanges" : [1.2, 12],
+        "CurrRanges" : [0.2]
+    },
+    "39": {
+        "Name" : "i9;",
+        "CoilName": "e1",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 1.2,
+        "SetCurrRange" : 0.2,
+        "VoltRanges" : [1.2, 12],
+        "CurrRanges" : [0.2]
+    },
+    "40": {
+        "Name" : "i10;",
+        "CoilName": "e2",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 1.2,
+        "SetCurrRange" : 0.2,
+        "VoltRanges" : [1.2, 12],
+        "CurrRanges" : [0.2]
+    },
+    "41": {
+        "Name" : "i11;",
+        "CoilName": "e3",
+        "SetVolt" : 0,
+        "SetCurr" : 0,
+        "SetVoltRange" : 1.2,
+        "SetCurrRange" : 0.2,
+        "VoltRanges" : [1.2, 12],
+        "CurrRanges" : [0.2]
+    },
+    "42": {
+        "Name" : "i12;",
+        "CoilName": "e4",
         "SetVolt" : 0,
         "SetCurr" : 0,
         "SetVoltRange" : 1.2,
