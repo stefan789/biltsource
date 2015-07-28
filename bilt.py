@@ -21,11 +21,11 @@ class SocketObj:
             retVal = func(args)
         except IOError as e:
             # reraise if it's happened before
-            if self.has_errored: raise e 
+            if self.has_errored: raise e
             # otherwise try a reconnect
             self.has_errored = True
             self.__connect(self.address, self.port)
-            retVal = self.__socket_call(func, args) 
+            retVal = self.__socket_call(func, args)
         self.has_errored = False
         return retVal
 
@@ -58,97 +58,111 @@ class Bilt():
         conf -- file containing a json dictionary to read configuration from (default: sources.dict)
         """
         self.sources = self.readconfig(conf)
+        self.look_up = dict([(self.sources[k]["CoilName"],k) for k in self.sources])
         self.initComm()
 
     def initComm(self, ip="currentsource.1.nedm1"):
         """ Initalizes communication with device via visa.
-        
+
         Keyword argument:
         ip -- IP adress of the source, defaults to 192.168.1.251
         """
         self.s = SocketObj(str(ip), 5025)
 
-    def on(self, nr):
+    def _get_adress(self, cn):
+        """ Get source address from nr or coilname. """
+        try:
+            if isinstance(cn, int):
+                adr = self.sources[str(cn)]["Name"]
+                nr = cn
+            else:
+                adr = self.sources[self.look_up[cn]]["Name"]
+                nr = self.look_up[cn]
+        except KeyError as e:
+            raise e
+        return adr, int(nr)
+
+    def on(self, cn):
         """ Switch on source nr."""
-        adr = self.sources[str(nr)]["Name"]
+        adr, nr = self._get_adress(cn)
         self.setvoltrange(nr, self.sources[str(nr)]["SetVoltRange"])
         self.setvoltage(nr, self.sources[str(nr)]["SetVolt"])
         self.s.write(adr + " outp on")
 
-    def off(self, nr):
+    def off(self, cn):
         """ Switch off source nr."""
-        adr = self.sources[str(nr)]["Name"]
+        adr, nr = self._get_adress(cn)
         self.s.write(adr + " outp off")
 
-    def setvoltage(self, nr, volt=0.0):
+    def setvoltage(self, cn, volt=0.0):
         """ Set voltage for source nr to volt."""
-        adr = self.sources[str(nr)]["Name"]
+        adr, nr = self._get_adress(cn)
         if volt <= self.sources[str(nr)]["SetVoltRange"]:
             self.s.write(adr + " volt " + str(volt))
             self.sources[str(nr)]["SetVolt"] = volt
         else:
             raise Exception("Voltage out of range, setvoltrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetVoltRange"]), str(self.sources[str(nr)]["VoltRanges"])))
 
-    def setcurrent(self, nr, curr=0.0):
+    def setcurrent(self, cn, curr=0.0):
         """ Set current for source nr to curr."""
-        adr = self.sources[str(nr)]["Name"]
+        adr, nr = self._get_adress(cn)
         if curr <= self.sources[str(nr)]["SetCurrRange"]:
             self.s.write(adr + " curr " + str(curr))
             self.sources[str(nr)]["SetCurr"] = curr
         else:
             raise Exception("Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetCurrRange"]), str(self.sources[str(nr)]["CurrRanges"])))
-    
-    def setvoltrange(self, nr, ran):
+
+    def setvoltrange(self, cn, ran):
         """ Set voltage range for source nr to ran."""
+        adr, nr = self._get_adress(cn)
         if ran in self.sources[str(nr)]["VoltRanges"]:
-            adr = self.sources[str(nr)]["Name"]
             self.s.write(adr + " volt:rang:auto off")
             self.s.write(adr + " volt:rang" + str(ran))
             self.sources[str(nr)]["SetVoltRange"] = ran
         else:
             raise Exception("range not available, possible are %s" % str(self.sources[str(nr)]["VoltRanges"]))
 
-    def setcurrentrange(self, nr, ran):
+    def setcurrentrange(self, cn, ran):
         """ Set current range for source nr to ran."""
+        adr, nr = self._get_adress(cn)
         if ran in self.sources[str(nr)]["CurrRanges"]:
-            adr = self.sources[str(nr)]["Name"]
             self.s.write(adr + " curr:rang:auto off")
             self.s.write(adr + " curr:rang" + str(ran))
             self.sources[str(nr)]["SetCurrRange"] = ran
         else:
             raise Exception("range not available, possible are %s" % str(self.sources[str(nr)]["CurrRanges"]))
 
-    def getvoltage(self, nr):
+    def getvoltage(self, cn):
         """ Returns currently set voltage for source nr."""
-        return self.userask(nr, " meas:volt ?")
+        return self.userask(cn, " meas:volt ?")
 
-    def getcurrent(self, nr):
+    def getcurrent(self, cn):
         """ Returns currently set current for source nr."""
-        return self.userask(nr, " meas:curr ?")
+        return self.userask(cn, " meas:curr ?")
 
-    def getvoltrange(self, nr):
+    def getvoltrange(self, cn):
         """ Returns currently set voltage range for source nr."""
-        return self.userask(nr, "volt:range ?")
+        return self.userask(cn, "volt:range ?")
 
-    def getcurrentrange(self, nr):
+    def getcurrentrange(self, cn):
         """ Returns currently set current range for source nr."""
-        return self.userask(nr, "curr:range ?")
+        return self.userask(cn, "curr:range ?")
 
-    def clearstatus(self, nr):
-        self.userwrite(nr, "stat:clear")
+    def clearstatus(self, cn):
+        self.userwrite(cn, "stat:clear")
 
-    def userask(self, nr, cmd):
-        adr = self.sources[str(nr)]["Name"]
+    def userask(self, cn, cmd):
+        adr, nr = self._get_adress(cn)
         return self.s.ask(adr + cmd)
 
-    def userwrite(self, nr, cmd):
-        adr = self.sources[str(nr)]["Name"]
+    def userwrite(self, cn, cmd):
+        adr, nr = self._get_adress(cn)
         self.s.write(adr + cmd)
 
     def readconfig(self, conf):
         """ Reads configurations from file conf and return dictionary."""
         with open(str(conf), "r") as f:
-            sources = json.loads(f.read(), object_pairs_hook=collections.OrderedDict)
+            sources = json.loads(f.read())
         return sources
 
     def saveconfig(self, fil):
@@ -221,9 +235,9 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
     def read_macro_state(self):
         return self.s.ask("p1; p:stat?")
 
-    def getstatus(self, nr):
+    def getstatus(self, cn):
         """ Returns status of source nr."""
-        adr = self.sources[str(nr)]["Name"]
+        adr, nr = self._get_adress(cn)
         retr = self.s.ask(adr + "state ?")
         states = {'0' : 'Off', '1' : 'On', '2' : 'Warning', '3' : 'Alarm'}
         return states[str(retr)]
