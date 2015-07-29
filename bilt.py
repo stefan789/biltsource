@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import time
 import json
 import collections
@@ -51,14 +52,15 @@ class SocketObj:
 
 
 class Bilt():
-    def __init__(self, conf = "sources.dict"):
+    def __init__(self, conf = "config.dict"):
         """ Constructor.
 
         Keyword argument:
         conf -- file containing a json dictionary to read configuration from (default: sources.dict)
         """
-        self.sources = self.readconfig(conf)
-        self.look_up = dict([(self.sources[k]["CoilName"],k) for k in self.sources])
+        self.config = self.configfromdb()
+        self.settings = self.readconfig("settings.dict")
+        self.look_up = dict([(self.config[k]["CoilName"],k) for k in  self.config])
         self.initComm()
 
     def initComm(self, ip="currentsource.1.nedm1"):
@@ -72,12 +74,12 @@ class Bilt():
     def _get_adress(self, cn):
         """ Get source address from nr or coilname. """
         try:
-            if isinstance(cn, int):
-                adr = self.sources[str(cn)]["Name"]
-                nr = cn
-            else:
-                adr = self.sources[self.look_up[cn]]["Name"]
-                nr = self.look_up[cn]
+            cm = int(cn)
+            adr = self.config[str(cn)]["Name"]
+            nr = cn
+        except ValueError as e:
+            adr = self.config[self.look_up[cn]]["Name"]
+            nr = self.look_up[cn]
         except KeyError as e:
             raise e
         return adr, int(nr)
@@ -85,8 +87,8 @@ class Bilt():
     def on(self, cn):
         """ Switch on source nr."""
         adr, nr = self._get_adress(cn)
-        self.setvoltrange(nr, self.sources[str(nr)]["SetVoltRange"])
-        self.setvoltage(nr, self.sources[str(nr)]["SetVolt"])
+        self.setvoltrange(nr, self.settings[str(nr)]["SetVoltRange"])
+        self.setvoltage(nr, self.settings[str(nr)]["SetVolt"])
         self.s.write(adr + " outp on")
 
     def off(self, cn):
@@ -97,40 +99,40 @@ class Bilt():
     def setvoltage(self, cn, volt=0.0):
         """ Set voltage for source nr to volt."""
         adr, nr = self._get_adress(cn)
-        if volt <= self.sources[str(nr)]["SetVoltRange"]:
+        if volt <= self.settings[str(nr)]["SetVoltRange"]:
             self.s.write(adr + " volt " + str(volt))
-            self.sources[str(nr)]["SetVolt"] = volt
+            self.settings[str(nr)]["SetVolt"] = volt
         else:
-            raise Exception("Voltage out of range, setvoltrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetVoltRange"]), str(self.sources[str(nr)]["VoltRanges"])))
+            raise Exception("Voltage out of range, setvoltrange first, set: %s, available ranges: %s" % (str(self.settings[str(nr)]["SetVoltRange"]), str( self.config[str(nr)]["VoltRanges"])))
 
     def setcurrent(self, cn, curr=0.0):
         """ Set current for source nr to curr."""
         adr, nr = self._get_adress(cn)
-        if curr <= self.sources[str(nr)]["SetCurrRange"]:
+        if curr <= self.settings[str(nr)]["SetCurrRange"]:
             self.s.write(adr + " curr " + str(curr))
-            self.sources[str(nr)]["SetCurr"] = curr
+            self.settings[str(nr)]["SetCurr"] = curr
         else:
-            raise Exception("Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.sources[str(nr)]["SetCurrRange"]), str(self.sources[str(nr)]["CurrRanges"])))
+            raise Exception("Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.settings[str(nr)]["SetCurrRange"]), str( self.config[str(nr)]["CurrRanges"])))
 
     def setvoltrange(self, cn, ran):
         """ Set voltage range for source nr to ran."""
         adr, nr = self._get_adress(cn)
-        if ran in self.sources[str(nr)]["VoltRanges"]:
+        if ran in  self.config[str(nr)]["VoltRanges"]:
             self.s.write(adr + " volt:rang:auto off")
             self.s.write(adr + " volt:rang" + str(ran))
-            self.sources[str(nr)]["SetVoltRange"] = ran
+            self.settings[str(nr)]["SetVoltRange"] = ran
         else:
-            raise Exception("range not available, possible are %s" % str(self.sources[str(nr)]["VoltRanges"]))
+            raise Exception("range not available, possible are %s" % str( self.config[str(nr)]["VoltRanges"]))
 
     def setcurrentrange(self, cn, ran):
         """ Set current range for source nr to ran."""
         adr, nr = self._get_adress(cn)
-        if ran in self.sources[str(nr)]["CurrRanges"]:
+        if ran in  self.config[str(nr)]["CurrRanges"]:
             self.s.write(adr + " curr:rang:auto off")
             self.s.write(adr + " curr:rang" + str(ran))
-            self.sources[str(nr)]["SetCurrRange"] = ran
+            self.settings[str(nr)]["SetCurrRange"] = ran
         else:
-            raise Exception("range not available, possible are %s" % str(self.sources[str(nr)]["CurrRanges"]))
+            raise Exception("range not available, possible are %s" % str( self.config[str(nr)]["CurrRanges"]))
 
     def getvoltage(self, cn):
         """ Returns currently set voltage for source nr."""
@@ -165,10 +167,23 @@ class Bilt():
             sources = json.loads(f.read())
         return sources
 
+    def configfromdb(self):
+        import cloudant
+        import json
+        acct = cloudant.Account(uri="http://localhost:5984")
+        res = acct.login("stefan", "root")
+        assert res.status_code == 200
+        # Grab the correct database
+        db = acct["nedm%2Finternal_coils_n"]
+        des = db.design("document_type")
+        theview = des.view("document_type")
+        conf = db["bilt_config"].get().json()
+        return conf["value"]
+
     def saveconfig(self, fil):
         """ Saves configuration to file fil."""
         with open(str(fil), "w") as f:
-            f.write(json.dumps(self.sources, indent=4, separators = (',', ' : ')))
+            f.write(json.dumps( self.config, indent=4, separators = (',', ' : ')))
 
     def readallerrors(self):
         ret_array = []
@@ -178,6 +193,7 @@ class Bilt():
             ret_array.append(rbck)
         if len(ret_array) == 0: ret_array = ["No errors"]
         return ret_array
+
     def setup_ramp(self, adict):
         time_length = float(adict.get("time_length", 1.))
         all_keys = adict.get("channels", {})
@@ -185,7 +201,7 @@ class Bilt():
         total_steps = int(10*time_length)
         i = 0
         for v in all_keys:
-            v['addr'] = self.sources[str(v['nr'])]["Name"]
+            v['addr'] =  self.config[str(v['nr'])]["Name"]
             for l in ['min', 'max']:
                 v[l] = float(v[l])
             v['step_size'] = (v['max'] - v['min'])/float(total_steps)
@@ -241,3 +257,23 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
         retr = self.s.ask(adr + "state ?")
         states = {'0' : 'Off', '1' : 'On', '2' : 'Warning', '3' : 'Alarm'}
         return states[str(retr)]
+
+    def update_settings(self, adict):
+        sta = {}
+        for k in adict:
+            st = self.getstatus(k)
+            sta[k] = st
+            if st == 'On':
+                self.off(k)
+            if adict[k]["SetVoltRange"] != self.settings[k]["SetVoltRange"]:
+                self.setvoltrange(k, self.settings[k]["SetVoltRange"])
+            if adict[k]["SetCurrRange"] != self.settings[k]["SetCurrRange"]:
+                self.setcurrentrange(k, self.settings[k]["SetCurrRange"])
+            if adict[k]["SetVolt"] != self.settings[k]["SetVolt"]:
+                self.setvoltage(k, self.settings[k]["SetVolt"])
+            if adict[k]["SetCurr"] != self.settings[k]["SetCurr"]:
+                self.setcurrent(k, self.settings[k]["SetCurr"])
+        for k in sta:
+            if k == 'On':
+                self.on(k)
+        self.settings = adict
