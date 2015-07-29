@@ -22,7 +22,7 @@ class BiltSource(object):
 
     def setvoltrange(self, ran):
         self.b.setvoltrange(self.nr, float(ran))
-    
+
     def setcurrentrange(self, ran):
         self.b.setcurrentrange(self.nr, float(ran))
 
@@ -53,7 +53,7 @@ def main():
          if chan not in _built_source_objs:
              _built_source_objs[chan] = BiltSource(chan)
          b = _built_source_objs[chan]
-         return getattr(b, func)(*args)
+         return getattr(b, func)(chan, *args)
 
     def _make_lambda(func):
         def f(*args):
@@ -88,12 +88,14 @@ def main():
         if name[:2] == '__': continue
         adict[name] = _make_lambda(name)
 
-    pynedm.listen(adict, "nedm%2Finternal_coils",
-                  username="internal_coils_writer",
-                  password="clu$terXz",
-                  uri="http://raid.nedm1:5984")
+    print(adict)
 
-    pynedm.wait()
+    pyl = pynedm.listen(adict, "nedm%2Finternal_coils",
+                  username="stefan",
+                  password="root",
+                  uri="http://localhost:5984")
+
+    pyl.wait()
 
 if __name__ == '__main__':
      main()
