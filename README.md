@@ -1,23 +1,11 @@
-biltsource
+bilt 
 ==========
 
-class Bilt to control all Bilt sources, configuration is read from file sources.dict
+modules to control bilt power supplies from the database
 
+listener.py runs on a raspberry pi and communicates command documents from the database to the power supply via bilt.py.
 
-make sure the source you want to use is listed in sources.dict
+bilt.py provides functions to read out and set values to the bilt sources.
 
-using the soure atm:
-
-use source 37(?)
-
-example:
-
-
-import biltsource as b
-
-b37=b.BiltSource(37)
-
-b37.setvoltage(1.2)
-
-b37.on()
+configuration, i.e. possible voltage and current ranges and the assignment which coil is connected to which power supply, is done with a dictionary on the database with the id "bilt_config"
 
