@@ -3,217 +3,217 @@
         "Name" : "i1; c1;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "2": {
         "Name" : "i1; c2;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "3": {
         "Name" : "i1; c3;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "4": {
         "Name" : "i1; c4;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "5": {
         "Name" : "i1; c5;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "6": {
         "Name" : "i1; c6;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "7": {
         "Name" : "i2; c1;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "8": {
         "Name" : "i2; c2;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "9": {
         "Name" : "i2; c3;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "10": {
         "Name" : "i2; c4;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "11": {
         "Name" : "i2; c5;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "12": {
         "Name" : "i2; c6;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "13": {
         "Name" : "i3; c1;",
         "CoilName": "cBR2",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "14": {
         "Name" : "i3; c2;",
         "CoilName": "cBR3",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "15": {
         "Name" : "i3; c3;",
         "CoilName": "cBR4",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "16": {
         "Name" : "i3; c4;",
         "CoilName": "cBR5",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "17": {
         "Name" : "i3; c5;",
         "CoilName": "cBL2",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "18": {
         "Name" : "i3; c6;",
         "CoilName": "cBL3",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "19": {
         "Name" : "i4; c1;",
         "CoilName": "cBL4",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "20": {
         "Name" : "i4; c2;",
         "CoilName": "cBL5",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "21": {
         "Name" : "i4; c3;",
         "CoilName": "cTL3",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "22": {
         "Name" : "i4; c4;",
         "CoilName": "cTL4",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "23": {
         "Name" : "i4; c5;",
         "CoilName": "cTL5",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "24": {
         "Name" : "i4; c6;",
         "CoilName": "cBL1",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "25": {
         "Name" : "i5; c1;",
         "CoilName": "cTR3",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "26": {
         "Name" : "i5; c2;",
         "CoilName": "cTR4",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "27": {
         "Name" : "i5; c3;",
         "CoilName": "cTR5",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "28": {
         "Name" : "i5; c4;",
         "CoilName": "cBR1",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "29": {
         "Name" : "i5; c5;",
         "CoilName": "cR0",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "30": {
         "Name" : "i5; c6;",
         "CoilName": "cTR1",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "31": {
         "Name" : "i6; c1;",
         "CoilName": "cTR2",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "32": {
         "Name" : "i6; c2;",
         "CoilName": "cL0",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "33": {
         "Name" : "i6; c3;",
         "CoilName": "cTL1",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "34": {
         "Name" : "i6; c4;",
         "CoilName": "cTL2",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "35": {
         "Name" : "i6; c5;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "36": {
         "Name" : "i6; c6;",
         "CoilName": "x",
         "VoltRanges" : [15],
-        "CurrRanges" : [0.002, 0.2]
+        "CurrRanges" : [0.02, 0.2]
     },
     "37": {
         "Name" : "i7;",
