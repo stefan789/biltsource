@@ -60,6 +60,7 @@ class Bilt():
         """
         self.config = self.configfromdb()
         self.settings = self.readconfig("settings.dict")
+        self.settings = self.settingfromdb()
         self.look_up = dict([(self.config[k]["CoilName"],k) for k in  self.config])
         self.initComm()
 
@@ -76,7 +77,7 @@ class Bilt():
         try:
             cm = int(cn)
             adr = self.config[str(cn)]["Name"]
-            nr = cn
+            nr = cm
         except ValueError as e:
             adr = self.config[self.look_up[cn]]["Name"]
             nr = self.look_up[cn]
@@ -96,10 +97,20 @@ class Bilt():
         adr, nr = self._get_adress(cn)
         self.s.write(adr + " outp off")
 
+    def setsource(self, cn, volt, curr, vrange, currange):
+        adr, nr = self._get_adress(cn)
+        self.setvoltrange(cn, vrange)
+        self.setcurrentrange(cn, currange)
+        self.setvoltage(cn, volt)
+        self.setcurrent(cn, curr)
+
+    def getsource(self, cn):
+        return self.getvoltage(cn), self.getcurrent(cn), self.getvoltrange(cn), self.getcurrentrange(cn), self.getstatus(cn)
+
     def setvoltage(self, cn, volt=0.0):
         """ Set voltage for source nr to volt."""
         adr, nr = self._get_adress(cn)
-        if volt <= self.settings[str(nr)]["SetVoltRange"]:
+        if volt <= self.config[str(nr)]["VoltRanges"]:
             self.s.write(adr + " volt " + str(volt))
             self.settings[str(nr)]["SetVolt"] = volt
         else:
@@ -108,7 +119,7 @@ class Bilt():
     def setcurrent(self, cn, curr=0.0):
         """ Set current for source nr to curr."""
         adr, nr = self._get_adress(cn)
-        if curr <= self.settings[str(nr)]["SetCurrRange"]:
+        if curr <= self.config[str(nr)]["CurrRanges"]:
             self.s.write(adr + " curr " + str(curr))
             self.settings[str(nr)]["SetCurr"] = curr
         else:
@@ -150,6 +161,18 @@ class Bilt():
         """ Returns currently set current range for source nr."""
         return self.userask(cn, "curr:range ?")
 
+    def print_settings(self, cn):
+        v = self.getvoltage(cn)
+        vr = self.getvoltrange(cn)
+        c = self.getcurrent(cn)
+        cr = self.getcurrentrange(cn)
+        print("\n \
+            Voltage: {}, \n \
+            Voltrange: {}, \n \
+            Current: {}, \n \
+            CurrentRange: {}".format(v,vr,c,cr) \
+        )
+
     def clearstatus(self, cn):
         self.userwrite(cn, "stat:clear")
 
@@ -167,16 +190,23 @@ class Bilt():
             sources = json.loads(f.read())
         return sources
 
-    def configfromdb(self):
+    def settingfromdb(self):
         import cloudant
-        import json
-        acct = cloudant.Account(uri="http://localhost:5984")
-        res = acct.login("stefan", "root")
+        acct = cloudant.Account(uri="http://raid.nedm1")
+        res = acct.login("user", "passwd")
         assert res.status_code == 200
         # Grab the correct database
-        db = acct["nedm%2Finternal_coils_n"]
-        des = db.design("document_type")
-        theview = des.view("document_type")
+        db = acct["nedm%2Finternal_coils"]
+        conf = db["B0_setting"].get().json()
+        return conf["value"]
+
+    def configfromdb(self):
+        import cloudant
+        acct = cloudant.Account(uri="http://raid.nedm1")
+        res = acct.login("user", "passwd")
+        assert res.status_code == 200
+        # Grab the correct database
+        db = acct["nedm%2Finternal_coils"]
         conf = db["bilt_config"].get().json()
         return conf["value"]
 
