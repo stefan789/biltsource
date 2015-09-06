@@ -59,7 +59,6 @@ class Bilt():
         conf -- file containing a json dictionary to read configuration from (default: sources.dict)
         """
         self.config = self.configfromdb()
-        self.settings = self.readconfig("settings.dict")
         self.settings = self.settingfromdb()
         self.look_up = dict([(self.config[k]["CoilName"],k) for k in  self.config])
         self.initComm()
@@ -287,6 +286,13 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
         retr = self.s.ask(adr + "state ?")
         states = {'0' : 'Off', '1' : 'On', '2' : 'Warning', '3' : 'Alarm'}
         return states[str(retr)]
+    
+    def getpower(self):
+        """ returns power drawn from +25V and -25V supply lines in watts """
+        retr = self.s.ask("syst:pow?")
+        mp = float(retr[-1])/100. * 260  # 260 max power on -25
+        pp = float(retr[6])/100. * 520   # 520 max power on +25 from syst:pow:max?
+        return pp,mp
 
     def update_settings(self, adict):
         sta = {}
