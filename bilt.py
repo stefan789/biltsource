@@ -189,7 +189,7 @@ class Bilt():
             sources = json.loads(f.read())
         return sources
 
-    def settingfromdb(self):
+    def settingfromdb(self, name="B0_setting"):
         import cloudant
         acct = cloudant.Account(uri="http://raid.nedm1")
         #res = acct.login("user", "passwd")
@@ -197,7 +197,7 @@ class Bilt():
         assert res.status_code == 200
         # Grab the correct database
         db = acct["nedm%2Finternal_coils"]
-        conf = db["B0_setting"].get().json()
+        conf = db[str(name)].get().json()
         return conf["value"]
 
     def configfromdb(self):
@@ -290,7 +290,7 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
         return states[str(retr)]
     
     def getpower(self):
-        """ returns power drawn from +25V and -25V supply line in watts """
+        """ returns power drawn from -25V and +25V supply line in watts """
         retr = self.s.ask("syst:pow?")
         mp = float(retr[-1])/100. * 260  # 260 max power on -25
         pp = float(retr[6])/100. * 520   # 520 max power on +25 from syst:pow:max?
@@ -325,25 +325,36 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
     def all_off(self):
         for k in self.settings:
             st = self.getstatus(k)
-            if st != 'Off':
+            if st == 'On':
                 self.off(k)
 
     def switch_setting(self, adict):
-        sta = {}
-        for k in self.config:
-            st = self.getstatus(k)
-            sta[k] = st
-            if st == 'On':
+        #sta = {}
+        #for k in self.config:
+        #    st = self.getstatus(k)
+        #    sta[k] = st
+        #    if st == 'On':
+        #        self.off(k)
+        self.all_off()
+        for k in adict:
+            print("Setting {}".format(k))
+            if self.getstatus(k) == "On":
                 self.off(k)
+           # if adict[k]["SetVoltRange"] != self.settings[k]["SetVoltRange"]:
+            self.setvoltrange(k, adict[k]["SetVoltRange"])
+           # if adict[k]["SetCurrRange"] != self.settings[k]["SetCurrRange"]:
+            self.setcurrentrange(k, adict[k]["SetCurrRange"])
+           # if adict[k]["SetVolt"] != self.settings[k]["SetVolt"]:
+            self.setvoltage(k, adict[k]["SetVolt"])
+           # if adict[k]["SetCurr"] != self.settings[k]["SetCurr"]:
+            self.setcurrent(k, adict[k]["SetCurr"])
         for k in adict:
-            if adict[k]["SetVoltRange"] != self.settings[k]["SetVoltRange"]:
-                self.setvoltrange(k, adict[k]["SetVoltRange"])
-            if adict[k]["SetCurrRange"] != adict[k]["SetCurrRange"]:
-                self.setcurrentrange(k, adict[k]["SetCurrRange"])
-            if adict[k]["SetVolt"] != adict[k]["SetVolt"]:
-                self.setvoltage(k, adict[k]["SetVolt"])
-            if adict[k]["SetCurr"] != adict[k]["SetCurr"]:
-                self.setcurrent(k, adict[k]["SetCurr"])
-        for k in adict:
+            print(" {} on".format(k))
             self.on(k)
+        self.settings = adict
+        return True
+
+    def set_by_name(self, name):
+        adict = self.settingfromdb(name)
+        self.switch_setting(adict)
         return True
