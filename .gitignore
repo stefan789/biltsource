@@ -34,3 +34,8 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+*.ipynb
+
+config/
+!config/B01p1muT.dict

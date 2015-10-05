@@ -189,7 +189,7 @@ class Bilt():
             sources = json.loads(f.read())
         return sources
 
-    def settingfromdb(self, name="B0_setting"):
+    def settingfromdb(self, name="complete_B0"):
         import cloudant
         acct = cloudant.Account(uri="http://raid.nedm1")
         #res = acct.login("user", "passwd")
@@ -288,7 +288,7 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
         retr = self.s.ask(adr + "state ?")
         states = {'0' : 'Off', '1' : 'On', '2' : 'Warning', '3' : 'Alarm'}
         return states[str(retr)]
-    
+
     def getpower(self):
         """ returns power drawn from -25V and +25V supply line in watts """
         retr = self.s.ask("syst:pow?")
@@ -323,35 +323,47 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
                 self.on(k)
 
     def all_off(self):
-        for k in self.settings:
+        for k in self.config:
             st = self.getstatus(k)
             if st == 'On':
                 self.off(k)
 
     def switch_setting(self, adict):
-        #sta = {}
-        #for k in self.config:
-        #    st = self.getstatus(k)
-        #    sta[k] = st
-        #    if st == 'On':
-        #        self.off(k)
-        self.all_off()
         for k in adict:
             print("Setting {}".format(k))
-            if self.getstatus(k) == "On":
+            if adict[k]["SetCurrRange"] != self.settings[k]["SetCurrRange"]:
+                if self.getstatus(k) == "On":
+                    wason = True
+                    self.off(k)
+                self.setcurrentrange(k, adict[k]["SetCurrRange"])
+                self.settings[k]["SetCurrRange"] = adict[k]["SetCurrRange"]
+                if wason:
+                    self.on(k)
+
+            if adict[k]["SetVoltRange"] != self.settings[k]["SetVoltRange"]:
+                if self.getstatus(k) == "On":
+                    wason = True
+                    self.off(k)
+                self.setvoltrange(k, adict[k]["SetVoltRange"])
+                self.settings[k]["SetVoltRange"] = adict[k]["SetVoltRange"]
+                if wason:
+                    self.on(k)
+
+            if adict[k]["SetVolt"] != self.settings[k]["SetVolt"]:
+                self.setvoltage(k, adict[k]["SetVolt"])
+                self.settings[k]["SetVolt"] = adict[k]["SetVolt"]
+            if adict[k]["SetCurr"] != self.settings[k]["SetCurr"]:
+                self.setcurrent(k, adict[k]["SetVolt"])
+                self.settings[k]["SetCurr"] = adict[k]["SetCurr"]
+
+        for k in self.settings:
+            if k not in adict:
+                print("Switch off {}".format(k))
                 self.off(k)
-           # if adict[k]["SetVoltRange"] != self.settings[k]["SetVoltRange"]:
-            self.setvoltrange(k, adict[k]["SetVoltRange"])
-           # if adict[k]["SetCurrRange"] != self.settings[k]["SetCurrRange"]:
-            self.setcurrentrange(k, adict[k]["SetCurrRange"])
-           # if adict[k]["SetVolt"] != self.settings[k]["SetVolt"]:
-            self.setvoltage(k, adict[k]["SetVolt"])
-           # if adict[k]["SetCurr"] != self.settings[k]["SetCurr"]:
-            self.setcurrent(k, adict[k]["SetCurr"])
+
         for k in adict:
-            print(" {} on".format(k))
+            print("Switch on {}".format(k))
             self.on(k)
-        self.settings = adict
         return True
 
     def set_by_name(self, name):

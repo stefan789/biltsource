@@ -1,8 +1,0 @@
-{
-    "37": {
-        "SetVolt" : 1.1416,
-        "SetCurr" : 0,
-        "SetVoltRange" : 12,
-        "SetCurrRange" : 0.2
-    }
-}
