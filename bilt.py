@@ -56,11 +56,13 @@ class Bilt():
         """ Constructor.
 
         Keyword argument:
-        conf -- file containing a json dictionary to read configuration from (default: sources.dict)
+        conf -- file containing a json dictionary to read configuration from 
+        (default: sources.dict)
         """
         self.config = self.configfromdb()
         self.settings = self.settingfromdb()
-        self.look_up = dict([(self.config[k]["CoilName"],k) for k in  self.config])
+        self.look_up = dict(
+                [(self.config[k]["CoilName"],k) for k in  self.config])
         self.initComm()
 
     def initComm(self, ip="currentsource.1.nedm1"):
@@ -87,8 +89,8 @@ class Bilt():
     def on(self, cn):
         """ Switch on source nr."""
         adr, nr = self._get_adress(cn)
-        self.setvoltrange(nr, self.settings[str(nr)]["SetVoltRange"])
-        self.setvoltage(nr, self.settings[str(nr)]["SetVolt"])
+        #self.setvoltrange(nr, self.settings[str(nr)]["SetVoltRange"])
+        #self.setvoltage(nr, self.settings[str(nr)]["SetVolt"])
         self.s.write(adr + " outp on")
 
     def off(self, cn):
@@ -104,7 +106,9 @@ class Bilt():
         self.setcurrent(cn, curr)
 
     def getsource(self, cn):
-        return self.getvoltage(cn), self.getcurrent(cn), self.getvoltrange(cn), self.getcurrentrange(cn), self.getstatus(cn)
+        return self.getvoltage(cn), self.getcurrent(cn), \
+                self.getvoltrange(cn), self.getcurrentrange(cn), \
+                self.getstatus(cn)
 
     def setvoltage(self, cn, volt=0.0):
         """ Set voltage for source nr to volt."""
@@ -113,7 +117,10 @@ class Bilt():
             self.s.write(adr + " volt " + str(volt))
             self.settings[str(nr)]["SetVolt"] = volt
         else:
-            raise Exception("Voltage out of range, setvoltrange first, set: %s, available ranges: %s" % (str(self.settings[str(nr)]["SetVoltRange"]), str( self.config[str(nr)]["VoltRanges"])))
+            raise Exception("Voltage out of range, " +
+                    "setvoltrange first, set: %s, available ranges: %s" 
+                    %(str(self.settings[str(nr)]["SetVoltRange"]), 
+                    str( self.config[str(nr)]["VoltRanges"])))
 
     def setcurrent(self, cn, curr=0.0):
         """ Set current for source nr to curr."""
@@ -122,7 +129,10 @@ class Bilt():
             self.s.write(adr + " curr " + str(curr))
             self.settings[str(nr)]["SetCurr"] = curr
         else:
-            raise Exception("Current out of range, setcurrrange first, set: %s, available ranges: %s" % (str(self.settings[str(nr)]["SetCurrRange"]), str( self.config[str(nr)]["CurrRanges"])))
+            raise Exception("Current out of range, "+
+            "setcurrrange first, set: %s, available ranges: %s" 
+            % (str(self.settings[str(nr)]["SetCurrRange"]), 
+                str( self.config[str(nr)]["CurrRanges"])))
 
     def setvoltrange(self, cn, ran):
         """ Set voltage range for source nr to ran."""
@@ -132,7 +142,8 @@ class Bilt():
             self.s.write(adr + " volt:rang" + str(ran))
             self.settings[str(nr)]["SetVoltRange"] = ran
         else:
-            raise Exception("range not available, possible are %s" % str( self.config[str(nr)]["VoltRanges"]))
+            raise Exception("range not available, possible are %s" 
+                    % str( self.config[str(nr)]["VoltRanges"]))
 
     def setcurrentrange(self, cn, ran):
         """ Set current range for source nr to ran."""
@@ -142,7 +153,8 @@ class Bilt():
             self.s.write(adr + " curr:rang" + str(ran))
             self.settings[str(nr)]["SetCurrRange"] = ran
         else:
-            raise Exception("range not available, possible are %s" % str( self.config[str(nr)]["CurrRanges"]))
+            raise Exception("range not available, possible are %s" 
+                    % str( self.config[str(nr)]["CurrRanges"]))
 
     def getvoltage(self, cn):
         """ Returns currently set voltage for source nr."""
@@ -214,7 +226,8 @@ class Bilt():
     def saveconfig(self, fil):
         """ Saves configuration to file fil."""
         with open(str(fil), "w") as f:
-            f.write(json.dumps( self.config, indent=4, separators = (',', ' : ')))
+            f.write(json.dumps( 
+                self.config, indent=4, separators = (',', ' : ')))
 
     def readallerrors(self):
         ret_array = []
@@ -328,43 +341,75 @@ p:mac:atrestart2 ; reinit""" % (scpi_cmds[0][:-1], scpi_cmds[1][:-2])
             if st == 'On':
                 self.off(k)
 
-    def switch_setting(self, adict):
+    def switch_settings(self, adict):
+        old = self.settings
         for k in adict:
             print("Setting {}".format(k))
-            if adict[k]["SetCurrRange"] != self.settings[k]["SetCurrRange"]:
+            if adict[k]["SetCurrRange"] != old[k]["SetCurrRange"]:
+                wason = False
                 if self.getstatus(k) == "On":
                     wason = True
                     self.off(k)
                 self.setcurrentrange(k, adict[k]["SetCurrRange"])
-                self.settings[k]["SetCurrRange"] = adict[k]["SetCurrRange"]
+                print("set curr range {}".format(adict[k]["SetCurrRange"]))
                 if wason:
                     self.on(k)
 
-            if adict[k]["SetVoltRange"] != self.settings[k]["SetVoltRange"]:
+            if adict[k]["SetVoltRange"] != old[k]["SetVoltRange"]:
+                wason = False
                 if self.getstatus(k) == "On":
                     wason = True
                     self.off(k)
                 self.setvoltrange(k, adict[k]["SetVoltRange"])
-                self.settings[k]["SetVoltRange"] = adict[k]["SetVoltRange"]
+                print("set volt range {}".format(adict[k]["SetVoltRange"]))
                 if wason:
                     self.on(k)
 
-            if adict[k]["SetVolt"] != self.settings[k]["SetVolt"]:
+            if adict[k]["SetVolt"] != old[k]["SetVolt"]:
                 self.setvoltage(k, adict[k]["SetVolt"])
-                self.settings[k]["SetVolt"] = adict[k]["SetVolt"]
-            if adict[k]["SetCurr"] != self.settings[k]["SetCurr"]:
+                print("set volt {}".format(adict[k]["SetVolt"]))
+
+            if adict[k]["SetCurr"] != old[k]["SetCurr"]:
                 self.setcurrent(k, adict[k]["SetVolt"])
-                self.settings[k]["SetCurr"] = adict[k]["SetCurr"]
+                print("set curr {}".format(adict[k]["SetCurr"]))
 
         for k in self.settings:
             if k not in adict:
+                print("{} not in adict".format(k))
                 print("Switch off {}".format(k))
                 self.off(k)
 
         for k in adict:
             print("Switch on {}".format(k))
             self.on(k)
+
+        self.settings = adict
         return True
+
+    def switch_setting(self, adict):
+        old = self.settings
+        for k in adict:
+            print("Setting {}".format(k))
+            if adict[k]["SetCurrRange"] != old[k]["SetCurrRange"]:
+                if self.getstatus(k) != "Off":
+                    self.off(k)
+                    self.setcurrentrange(k, adict[k]["SetCurrRange"])
+            if adict[k]["SetVoltRange"] != old[k]["SetVoltRange"]:
+                if self.getstatus(k) != "Off":
+                    self.off(k)
+                    self.setvoltrange(k, adict[k]["SetVoltRange"])
+            if adict[k]["SetCurr"] != old[k]["SetCurr"]:
+                self.setcurrent(k, adict[k]["SetCurr"])
+            if adict[k]["SetVolt"] != old[k]["SetVolt"]:
+                self.setvoltage(k, adict[k]["SetVolt"])
+            self.settings[k] = adict[k]
+            self.on(k)
+        for k in set.difference(set(old.keys()), set(adict.keys())):
+            self.settings[k]["SetVolt"] = 0
+            self.settings[k]["SetCurr"] = 0
+            self.off(k)
+        return True
+
 
     def set_by_name(self, name):
         adict = self.settingfromdb(name)
