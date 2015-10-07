@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import time
 import json
-import collections
 import socket
 
 class SocketObj:
@@ -12,6 +11,7 @@ class SocketObj:
     def __connect(self, address, port):
         s = socket.socket()
         s.connect((str(address), port))
+        s.settimeout(30)
         self.s = s
         self.port = port
         self.address = address
@@ -25,6 +25,7 @@ class SocketObj:
             if self.has_errored: raise e
             # otherwise try a reconnect
             self.has_errored = True
+            self.s.close()
             self.__connect(self.address, self.port)
             retVal = self.__socket_call(func, args)
         self.has_errored = False
